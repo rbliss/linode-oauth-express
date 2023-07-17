@@ -28,13 +28,18 @@ InternalOAuthError: Failed to obtain access token
 ```
 
 ## Starting
-1. Install dependencies:
+1. Create an OAuth app in Linode with the following settings:
+
+- Name: your choice, doesn't matter
+- Callback URL: `http://localhost:3000/auth/callback`
+
+2. Install dependencies:
 
 ```
 npm install
 ```
 
-2. Run app by using the `npm start` command and setting CLIENT_ID and CLIENT_SECRET env vars:
+3. Run app by using the `npm start` command and setting CLIENT_ID and CLIENT_SECRET env vars from Linode OAuth application created in step 1:
 
 ```
 CLIENT_ID={client-id-here} CLIENT_SECRET={client-secret-here} npm start
