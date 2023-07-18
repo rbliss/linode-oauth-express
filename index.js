@@ -40,6 +40,10 @@ passport.use('linode', new OAuth2Strategy({
     clientSecret,
     callbackURL: 'http://localhost:3000/auth/callback',
     passReqToCallback: true,
+    customHeaders: {
+      Accept: 'application/json',
+      "Accept-Language": "en-US,en;q=0.5"
+    },
   },
   (req, accessToken, refreshToken, profile, cb) => {
     // Profile translates to a success in this app. Would normally do additional user verification.
