@@ -39,8 +39,19 @@ InternalOAuthError: Failed to obtain access token
 npm install
 ```
 
-3. Run app by using the `npm start` command and setting CLIENT_ID and CLIENT_SECRET env vars from Linode OAuth application created in step 1:
+3. Run app by using the `npm start` command and setting CLIENT_ID, CLIENT_SECRET, and CALLBACK_URL env vars from Linode OAuth application created in step 1:
 
 ```
-CLIENT_ID={client-id-here} CLIENT_SECRET={client-secret-here} npm start
+CLIENT_ID={client-id-here} CLIENT_SECRET={client-secret-here} CALLBACK_URL={callback-url-here} npm start
+```
+
+
+## Running with docker
+
+```
+docker build -t linode-oauth-express .
+```
+
+```
+docker run -p 3000:3000 -e CLIENT_ID=your_client_id -e CLIENT_SECRET=your_client_secret -e CALLBACK_URL linode-oauth-express
 ```

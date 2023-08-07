@@ -1,8 +1,11 @@
-var express = require('express');
-var passport = require('passport');
-var session = require('express-session')
-var OAuth2Strategy = require('passport-oauth2');
-var app = express();
+const express = require('express');
+const passport = require('passport');
+const session = require('express-session');
+const OAuth2Strategy = require('passport-oauth2');
+const helmet = require('helmet');
+const app = express();
+const morgan = require('morgan')
+
 
 if (!process.env.CLIENT_ID || !process.env.CLIENT_SECRET) {
   console.log('Please provide a CLIENT_ID and CLIENT_SECRET env var.');
@@ -12,6 +15,11 @@ if (!process.env.CLIENT_ID || !process.env.CLIENT_SECRET) {
 /******* BOILER PLATE ********/
 const clientID = process.env.CLIENT_ID;
 const clientSecret = process.env.CLIENT_SECRET;
+const callbackURL = process.env.CALLBACK_URL;
+
+app.use(helmet());
+
+app.use(morgan('tiny'));
 
 app.use(session({
   secret: 'unsafe-temporary-secret-for-testing',
@@ -31,14 +39,13 @@ passport.deserializeUser((user, done) => {
   done(undefined, user);
 });
 
-
 /***** LINODE OAUTH2 CONFIGURATION ******/
 passport.use('linode', new OAuth2Strategy({
     authorizationURL: 'https://login.linode.com/oauth/authorize',
     tokenURL: 'https://login.linode.com/oauth/token',
     clientID,
     clientSecret,
-    callbackURL: 'http://localhost:3000/auth/callback',
+    callbackURL,
     passReqToCallback: true,
     customHeaders: {
       Accept: 'application/json',
@@ -73,6 +80,13 @@ app.get('/', (req, res) => {
 
 app.get('/failed', (req, res) => {
   res.status(200).send('authentication failed');
+})
+
+app.get('/logout', (req, res) => {
+  req.logout((err) => {
+    if (err) { return next(err) }
+    res.redirect('/');
+  })
 })
 
 // Error handler for when strategy fails
